@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Promoções</title>
+</head>
+<body>
+  <h1>Promoções</h1>
+  <table>
+    <thead>
+       <tr>
+         <td>idProduct</td>
+         <td>name</td>
+         <td>price</td>
+         <td>oldPrice</td>
+         <td>lowerPrice</td>
+         <td>percent</td>
+         <td>dateLastUpdate</td>
+       </tr>
+    </thead>
+    <tbody>
+      <% for(var i=0; i < data.length; i++) { %>
+         <tr>
+           <td><%= data[i].idProduct %></td>
+           <td><%= data[i].name %></td>
+           <td><%= data[i].price %></td>
+           <td><%= data[i].oldPrice %></td>
+           <td><%= data[i].lowerPrice %></td>
+           <td><%= data[i].percent %></td>
+           <td><%= data[i].dateLastUpdate %></td>
+         </tr>
+      <% } %>
+    </tbody>
+  </table>
+</body>
+</html>
