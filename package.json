@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "List Promotions",
   "main": "app.js",
+  "engines": {
+    "node": "4.5.0"
+  },
   "dependencies": {
     "cheerio": "^0.22.0",
     "dotenv": "^2.0.0",
