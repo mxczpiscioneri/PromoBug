@@ -1,6 +1,6 @@
 {
   "name": "Promotions",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "List Promotions",
   "main": "app.js",
   "dependencies": {
@@ -21,8 +21,12 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
-  "author": "Piscioneri",
-  "license": "MIT"
+  "author": "Matheus Piscioneri <mxczpiscioneri@gmail.com> (http://matheuspiscioneri.com.br)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mxczpiscioneri/promotions.git"
+  }
 }
