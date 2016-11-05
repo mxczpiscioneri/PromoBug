@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-var Price = require('./mongo.js')(mongoose);
+var Price = require('./mongo.js');
 var getProducts = require('./get_products.js');
 
 app.set('view engine', 'ejs');
@@ -24,7 +24,8 @@ app.get('/', function(req, res) {
 });
 
 app.get('/update', function(req, res) {
-	getProducts.getAll();
+	console.log("Get all products");
+	res.send(getProducts.getAll(Price));
 });
 
 app.listen(process.env.PORT || 8080, function() {

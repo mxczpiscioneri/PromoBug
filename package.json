@@ -1,8 +1,8 @@
 {
-  "name": "node1",
+  "name": "Promotions",
   "version": "1.0.0",
-  "description": "teste",
-  "main": "ceva.js",
+  "description": "List Promotions",
+  "main": "app.js",
   "dependencies": {
     "cheerio": "^0.22.0",
     "dotenv": "^2.0.0",
@@ -10,7 +10,6 @@
     "express": "^4.14.0",
     "mongoose": "^4.6.3",
     "nodemailer": "^2.6.4",
-    "nodemon": "^1.11.0",
     "request": "^2.75.0"
   },
   "devDependencies": {
