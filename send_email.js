@@ -5,7 +5,7 @@ dotenv.load();
 
 var send = function(textMessage) {
 	var transporter = nodemailer.createTransport(smtpTransport({
-		service: EMAIL_SERVICE,
+		service: process.env.EMAIL_SERVICE,
 		auth: {
 			user: process.env.EMAIL_USER,
 			pass: process.env.EMAIL_PASS
@@ -20,7 +20,7 @@ var send = function(textMessage) {
 	}
 
 	transporter.sendMail(mailOptions, function(error, response) {
-		if (error) console.log(`Erro: ${error}`);
+		if (error) console.log(error);
 		transporter.close();
 	});
 }

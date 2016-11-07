@@ -15,19 +15,19 @@
          <td>oldPrice</td>
          <td>lowerPrice</td>
          <td>percent</td>
-         <td>dateLastUpdate</td>
+         <td>dateLowerPrice</td>
        </tr>
     </thead>
     <tbody>
       <% for(var i=0; i < data.length; i++) { %>
          <tr>
            <td><%= data[i].idProduct %></td>
-           <td><%= data[i].name %></td>
+           <td><a href="<%= data[i].link %>" target="_blank"><%= data[i].name %></a></td>
            <td><%= data[i].price %></td>
            <td><%= data[i].oldPrice %></td>
            <td><%= data[i].lowerPrice %></td>
            <td><%= data[i].percent %></td>
-           <td><%= data[i].dateLastUpdate %></td>
+           <td><%= data[i].dateLowerPrice %></td>
          </tr>
       <% } %>
     </tbody>

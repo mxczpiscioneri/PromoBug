@@ -5,15 +5,17 @@ var Email = require('./send_email.js');
 var page = 0;
 var total = 0;
 var arrayItems = new Array();
+var run_server = false;
 
-var getAll = function(Price) {
+var getAll = function(Price, server) {
 	console.log('Get products Submarino');
+	if (server) run_server = true;
 	getSubmarino(Price);
 }
 
 var getSubmarino = function(Price) {
 	request(`http://www.submarino.com.br/ajax/ofertas/linha/350374/celulares-e-telefonia-fixa/smartphone?ofertas.limit=90&ofertas.offset=${page}`, function(err, res, body) {
-		if (err || res.statusCode != 200) console.log('Erro: ' + err);
+		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
 		if (body.length > 0 && $('.products-area').find('.single-product').length > 0) {
@@ -43,7 +45,7 @@ var getSubmarino = function(Price) {
 				}
 			});
 
-			page = page + 900;
+			page = page + 90;
 			getSubmarino(Price);
 		} else {
 			console.log(`Total: ${total}`);
@@ -81,30 +83,37 @@ var findOne = function(Price, product, lastProduct) {
 				var priceOld = productFind.oldPrice;
 				var priceLower = productFind.lowerPrice;
 
-				productFind.oldPrice = priceCurrent;
-				productFind.price = priceNew;
-				productFind.dateLastUpdate = Date.now();
+				if (priceNew != priceCurrent) {
+					productFind.oldPrice = priceCurrent;
+					productFind.price = priceNew;
+					productFind.dateLastUpdate = Date.now();
+					productFind.percent = (100 - ((priceNew * 100) / priceCurrent)).toFixed(2);
+				}
 
 				if (priceNew < priceLower) {
 					productFind.lowerPrice = priceNew;
 					productFind.dateLowerPrice = Date.now();
-					productFind.percent = (100 - ((priceNew * 100) / priceCurrent)).toFixed(2);
-					var msg = `Minimo (De: ${priceLower} Para: ${priceNew})<br><br>${productFind}`;
-					if (priceCurrent & productFind.percent > 10) Email.send(textMessage);
+					var textMessage = `Minimo (De: ${priceLower} Para: ${priceNew}) ${productFind.name} (${productFind.link})`;
+					if (productFind.percent > 10) Email.send(textMessage);
+					console.log(textMessage);
 				} else if (priceNew < priceCurrent) {
-					productFind.percent = (100 - ((priceNew * 100) / priceCurrent)).toFixed(2);
-					var msg = `Menor (De:'p${riceCurrent} Para: ${priceNew})<br><br>${productFind}`;
-					if (priceCurrent & productFind.percent > 10) Email.send(textMessage);
+					var textMessage = `Menor (De: ${priceCurrent} Para: ${priceNew}) ${productFind.name} (${productFind.link})`;
+					if (productFind.percent > 10) Email.send(textMessage);
+					console.log(textMessage);
+				} else if (priceNew > priceCurrent) {
+					productFind.percent = 0;
 				}
 
-				return productFind.save();
+				productFind.save();
 			}
-			return product.save();
+			product.save();
 		})
 		.then(function() {
 			if (lastProduct) {
 				console.log('Fim');
-				// process.exit();
+				if (!run_server) {
+					process.exit();
+				}
 			}
 		});
 }
