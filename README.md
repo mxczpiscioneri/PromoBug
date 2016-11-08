@@ -5,3 +5,4 @@ Monitored Shops:
 
  - Submarino
 	 - Smartphone
+	 - Cerveja

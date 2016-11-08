@@ -23,6 +23,6 @@ var priceSchema = new mongoose.Schema({
 		default: Date.now
 	}
 });
-var Price = db.model('promisse', priceSchema);
+var Price = db.model('promotion', priceSchema);
 
 module.exports = Price;

@@ -2,18 +2,17 @@ var request = require('request');
 var cheerio = require('cheerio');
 var Email = require('./send_email.js');
 
-var page = 0;
-var total = 0;
-var arrayItems = new Array();
+var page, total, arrayItems;
 var run_server = false;
 
 var getAll = function(Price, server) {
-	console.log('Get products Submarino');
 	if (server) run_server = true;
-	getSubmarino(Price);
+	clearVariables();
+	console.log('Call getSubmarinoSmartphones');
+	getSubmarinoSmartphones(Price);
 }
 
-var getSubmarino = function(Price) {
+var getSubmarinoSmartphones = function(Price) {
 	request(`http://www.submarino.com.br/ajax/ofertas/linha/350374/celulares-e-telefonia-fixa/smartphone?ofertas.limit=90&ofertas.offset=${page}`, function(err, res, body) {
 		if (err || res.statusCode != 200) console.log(err);
 
@@ -37,37 +36,79 @@ var getSubmarino = function(Price) {
 						'price': price,
 						'oldPrice': price,
 						'lowerPrice': price,
-						'percent': null,
+						'percent': 0,
 						'link': link
 					});
-					console.log(`${name} (${price})`);
+					// console.log(`${name} (${price})`);
 					total++;
 				}
 			});
 
 			page = page + 90;
-			getSubmarino(Price);
+			getSubmarinoSmartphones(Price);
 		} else {
 			console.log(`Total: ${total}`);
-			saveAll(Price);
+			saveAll(Price, getSubmarinoCervejas);
 		}
 
 	});
 }
 
-var saveAll = function(Price) {
+var getSubmarinoCervejas = function(Price) {
+	request(`http://www.submarino.com.br/ajax/ofertas/sublinha/300088/alimentos-e-bebidas/bebidas-alcoolicas/cervejas-especiais?ofertas.limit=90&ofertas.offset=${page}`, function(err, res, body) {
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.products-area').find('.single-product').length > 0) {
+
+			$('.products-area .single-product').each(function() {
+				var store = 'Submarino';
+				var idProduct = $(this).find('.productId').val();
+				var name = $(this).find('.productInfo .top-area-product a span').text().trim();
+				var category = 'Cerveja';
+				var price = $(this).find('.productInfo .product-info .price-area .sale.price strong').text().trim().replace('.', '').replace(',', '.').replace('R$ ', '');
+				var link = $(this).find('.url').attr('href');
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 90;
+			getSubmarinoCervejas(Price);
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, false);
+		}
+
+	});
+}
+
+var saveAll = function(Price, nextFunction) {
 	for (var item in arrayItems) {
 		if (arrayItems.hasOwnProperty(item)) {
 			var lastProduct = false;
 			if ((arrayItems.length - 1) == item) lastProduct = true;
 
 			var product = new Price(arrayItems[item]);
-			findOne(Price, product, lastProduct);
+			findOne(Price, product, lastProduct, nextFunction);
 		}
 	}
 }
 
-var findOne = function(Price, product, lastProduct) {
+var findOne = function(Price, product, lastProduct, nextFunction) {
 	var query = {
 		store: product.store,
 		idProduct: product.idProduct
@@ -104,18 +145,28 @@ var findOne = function(Price, product, lastProduct) {
 					productFind.percent = 0;
 				}
 
-				productFind.save();
+				return productFind.save();
 			}
-			product.save();
+			return product.save();
 		})
 		.then(function() {
 			if (lastProduct) {
-				console.log('Fim');
-				if (!run_server) {
-					process.exit();
+				if (nextFunction) {
+					clearVariables();
+					console.log(`Call ${nextFunction.name}`);
+					nextFunction(Price);
+				} else {
+					console.log('Fim');
+					if (!run_server) process.exit();
 				}
 			}
 		});
+}
+
+var clearVariables = function() {
+	page = 0;
+	total = 0;
+	arrayItems = new Array();
 }
 
 module.exports = {
