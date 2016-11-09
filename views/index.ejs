@@ -1,38 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Promoções</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Promotions</title>
+  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="/css/acsset.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/custom.css">
 </head>
+
 <body>
-  <h1>Promoções</h1>
-  <table>
-    <thead>
-       <tr>
-         <td>idProduct</td>
-         <td>name</td>
-         <td>category</td>
-         <td>price</td>
-         <td>oldPrice</td>
-         <td>lowerPrice</td>
-         <td>percent</td>
-         <td>dateLowerPrice</td>
-       </tr>
-    </thead>
-    <tbody>
-      <% for(var i=0; i < data.length; i++) { %>
-         <tr>
-           <td><%= data[i].idProduct %></td>
-           <td><a href="<%= data[i].link %>" target="_blank"><%= data[i].name %></a></td>
-           <td><%= data[i].category %></td>
-           <td><%= data[i].price %></td>
-           <td><%= data[i].oldPrice %></td>
-           <td><%= data[i].lowerPrice %></td>
-           <td><%= data[i].percent %></td>
-           <td><%= data[i].dateLowerPrice %></td>
-         </tr>
-      <% } %>
-    </tbody>
-  </table>
+  <div class="grid-container-fluid bg-light">
+    <div class="grid-row margin-bottom-xl">
+      <div class="grid-xs-12">
+        <h1 class="text-xl text-secondary">Promotions</h1>
+        <p class="text-sm text-default">Search products on sale</p>
+      </div>
+    </div>
+    <div class="grid-row margin-bottom-xl">
+      <div class="grid-xs-12">
+        <table class="w100 bg-white box-shadow">
+          <thead>
+           <tr>
+            <%
+              if(order == "desc"){
+                order = "asc"
+              } else{
+                order = "desc"
+              }
+            %>
+             <td class="padding-sm"><a class="text-gray text-sm" href="/list/idProduct/<%= column == 'idProduct' ? order : 'desc' %>">Id</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="/list/name/<%= column == 'name' ? order : 'desc' %>">Name</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="/list/store/<%= column == 'store' ? order : 'desc' %>">Store</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="/list/category/<%= column == 'category' ? order : 'desc' %>">Category</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="/list/price/<%= column == 'price' ? order : 'desc' %>">Price</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="/list/oldPrice/<%= column == 'oldPrice' ? order : 'desc' %>">Old Price</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="/list/lowerPrice/<%= column == 'lowerPrice' ? order : 'desc' %>">Lower Price</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="/list/percent/<%= column == 'percent' ? order : 'desc' %>">Percent</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="/list/dateLowerPrice/<%= column == 'dateLowerPrice' ? order : 'desc' %>">Date Lower Price</a></td>
+           </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i < data.length; i++) { %>
+              <tr class="bd-bottom-xs bd-lightgray bd-bottom-solid text-default text-sm">
+                <td class="padding-sm"><%= data[i].idProduct %></td>
+                <td class="padding-sm"><a href="<%= data[i].link %>" target="_blank" class="text-primary"><%= data[i].name %></a></td>
+                <td class="padding-sm"><%= data[i].store %></td>
+                <td class="padding-sm"><%= data[i].category %></td>
+                <td class="padding-sm">R$ <%= data[i].price.toFixed(2) %></td>
+                <td class="padding-sm">R$ <%= data[i].oldPrice.toFixed(2) %></td>
+                <td class="padding-sm">R$ <%= data[i].lowerPrice.toFixed(2) %></td>
+                <td class="padding-sm"><%= data[i].percent %>%</td>
+                <td class="padding-sm"><%= new Date(data[i].dateLowerPrice).toLocaleString() %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>
