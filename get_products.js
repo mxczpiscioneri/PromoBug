@@ -90,6 +90,48 @@ var getSubmarinoCervejas = function(Price) {
 			getSubmarinoCervejas(Price);
 		} else {
 			console.log(`Total: ${total}`);
+			saveAll(Price, getEmporioCervejas);
+		}
+
+	});
+}
+
+var getEmporioCervejas = function(Price) {
+	request(`http://www.emporiodacerveja.com.br/buscapagina?fq=C%3a%2f9%2f&PS=45&sl=d3798342-50b3-490e-aac9-c1aa0d5f63d8&cc=3&sm=0&PageNumber=${page}`, function(err, res, body) {
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0) {
+
+			$('.prateleira  ul .cervejas').each(function() {
+				var store = 'Emporio';
+				var idProduct = $(this).find('.x-id').val();
+				var name = $(this).find('h3 a').text().trim();
+				var category = 'Cerveja';
+				var price = $(this).find('.x-bestPrice strong').text().trim().replace('.', '').replace(',', '.').replace('R$ ', '');
+				var link = $(this).find('.x-productImage').attr('href');
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 1;
+			getEmporioCervejas(Price);
+		} else {
+			console.log(`Total: ${total}`);
 			saveAll(Price, false);
 		}
 
