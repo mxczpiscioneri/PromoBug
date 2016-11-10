@@ -1,0 +1,8 @@
+{
+  "name": "Promotions",
+  "description": "List promotions",
+  "repository": "https://github.com/mxczpiscioneri/promotions",
+  "logo": "http://node-js-sample.heroku.com/node.svg",
+  "keywords": ["promotion", "product", "price", "store"],
+  "image": "heroku/nodejs"
+}

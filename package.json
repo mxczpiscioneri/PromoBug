@@ -2,7 +2,7 @@
   "name": "Promotions",
   "version": "0.0.1",
   "description": "List Promotions",
-  "main": "app.js",
+  "main": "app_server.js",
   "engines": {
     "node": "4.5.0"
   },
@@ -26,7 +26,7 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app_server.js"
   },
   "author": "Matheus Piscioneri <mxczpiscioneri@gmail.com> (http://matheuspiscioneri.com.br)",
   "license": "MIT",
