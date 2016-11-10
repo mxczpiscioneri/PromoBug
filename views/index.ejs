@@ -45,7 +45,7 @@
             <% for(var i=0; i < data.length; i++) { %>
               <tr class="bd-bottom-xs bd-lightgray bd-bottom-solid text-default text-sm">
                 <td class="padding-sm"><%= data[i].idProduct %></td>
-                <td class="padding-sm"><a href="<%= data[i].link %>" target="_blank" class="text-primary"><%= data[i].name %></a></td>
+                <td class="padding-sm"><a href="<%= data[i].link %>" target="_blank" class="text-primary"><%= data[i].name.substring(0, 60) %></a></td>
                 <td class="padding-sm"><%= data[i].store %></td>
                 <td class="padding-sm"><%= data[i].category %></td>
                 <td class="padding-sm">R$ <%= data[i].price.toFixed(2) %></td>

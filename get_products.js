@@ -132,6 +132,50 @@ var getEmporioCervejas = function(Price) {
 			getEmporioCervejas(Price);
 		} else {
 			console.log(`Total: ${total}`);
+			saveAll(Price, getGearbestSmartphones);
+		}
+
+	});
+}
+
+var getGearbestSmartphones = function(Price) {
+	request(`http://www.gearbest.com/cell-phones-c_11293/${page}.html?page_size=120`, function(err, res, body) {
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.cate_list_footer').find('.next').length > 0) {
+
+			$('#catePageList li').each(function() {
+				try {
+					var store = 'Gearbest';
+					var idProduct = $(this).find('.js_addToCompare').attr('data-goodsid');
+					var name = $(this).find('.all_proNam a').text().trim();
+					var category = 'Smartphone';
+					var price = $(this).find('.my_shop_price').attr('orgp').trim();
+					var link = $(this).find('.all_proNam a').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 1;
+			getGearbestSmartphones(Price);
+		} else {
+			console.log(`Total: ${total}`);
 			saveAll(Price, false);
 		}
 
