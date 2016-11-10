@@ -59,6 +59,28 @@ app.get('/update', function(req, res) {
 	res.send('Updating...');
 });
 
+app.get('/remove', function(req, res) {
+	Price.find({})
+		.sort([
+			['idProduct', 'asc']
+		])
+		.exec(function(err, prices) {
+			if (err) res.send(err);
+
+			var previousProduct;
+			for (var i = 0; i < prices.length; i++) {
+				var product = prices[i].store + prices[i].idProduct;
+				if (product == previousProduct) {
+					console.log(`Removed: ${product}`);
+					prices[i].remove();
+				}
+				previousProduct = product;
+			}
+		});
+
+	res.send('Removed...');
+});
+
 app.listen(process.env.PORT || 8080, function() {
 	console.log('App listening on port 8080!');
 });

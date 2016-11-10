@@ -23,6 +23,9 @@ var priceSchema = new mongoose.Schema({
 		default: Date.now
 	}
 });
+
+priceSchema.index({ store: 1, idProduct: 1 }, { unique: true });
+
 var Price = db.model('promotion', priceSchema);
 
 module.exports = Price;
