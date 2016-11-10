@@ -143,7 +143,7 @@ var getGearbestSmartphones = function(Price) {
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
-		if (body.length > 0 && $('.cate_list_footer').find('.next').length > 0) {
+		if (body.length > 0) {
 
 			$('#catePageList li').each(function() {
 				try {
@@ -172,8 +172,62 @@ var getGearbestSmartphones = function(Price) {
 				}
 			});
 
-			page = page + 1;
-			getGearbestSmartphones(Price);
+			if ($('.cate_list_footer').find('.next').length > 0) {
+				page = page + 1;
+				getGearbestSmartphones(Price);
+			} else {
+				console.log(`Total: ${total}`);
+				saveAll(Price, getGearbestComputadores);
+			}
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getGearbestComputadores);
+		}
+
+	});
+}
+
+var getGearbestComputadores = function(Price) {
+	request(`http://www.gearbest.com/computers-networking-c_11257/${page}.html?page_size=120`, function(err, res, body) {
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0) {
+
+			$('#catePageList li').each(function() {
+				try {
+					var store = 'Gearbest';
+					var idProduct = $(this).find('.js_addToCompare').attr('data-goodsid');
+					var name = $(this).find('.all_proNam a').text().trim();
+					var category = 'Computador';
+					var price = $(this).find('.my_shop_price').attr('orgp').trim();
+					var link = $(this).find('.all_proNam a').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			if ($('.cate_list_footer').find('.next').length > 0) {
+				page = page + 1;
+				getGearbestComputadores(Price);
+			} else {
+				console.log(`Total: ${total}`);
+				saveAll(Price, false);
+			}
 		} else {
 			console.log(`Total: ${total}`);
 			saveAll(Price, false);

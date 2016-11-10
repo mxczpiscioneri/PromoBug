@@ -8,3 +8,6 @@ Monitored Shops:
 	 - Cerveja
  - Emporio da Cerveja
 	 - Cerveja
+ - Gearbest
+	 - Smartphone
+	 - Computadores
