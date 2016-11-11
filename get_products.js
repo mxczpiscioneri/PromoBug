@@ -4,6 +4,7 @@ var Email = require('./send_email.js');
 
 var page, total, arrayItems;
 var run_server = false;
+var textMessage = '';
 
 var getAll = function(Price, server) {
 	if (server) run_server = true;
@@ -274,13 +275,9 @@ var findOne = function(Price, product, lastProduct, nextFunction) {
 				if (priceNew < priceLower) {
 					productFind.lowerPrice = priceNew;
 					productFind.dateLowerPrice = Date.now();
-					var textMessage = `Minimo (De: ${priceLower} Para: ${priceNew}) ${productFind.name} (${productFind.link})`;
-					if (productFind.percent > 10) Email.send(textMessage);
-					console.log(textMessage);
+					if (productFind.percent > 10) textMessage = `Minimo (De: ${priceLower} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
 				} else if (priceNew < priceCurrent) {
-					var textMessage = `Menor (De: ${priceCurrent} Para: ${priceNew}) ${productFind.name} (${productFind.link})`;
-					if (productFind.percent > 10) Email.send(textMessage);
-					console.log(textMessage);
+					if (productFind.percent > 10) textMessage = `Menor (De: ${priceCurrent} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
 				} else if (priceNew > priceCurrent) {
 					productFind.percent = 0;
 				}
@@ -296,6 +293,8 @@ var findOne = function(Price, product, lastProduct, nextFunction) {
 					console.log(`Call ${nextFunction.name}`);
 					nextFunction(Price);
 				} else {
+					console.log(textMessage);
+					if (textMessage != '') Email.send(textMessage);
 					console.log('Fim');
 					if (!run_server) process.exit();
 				}
