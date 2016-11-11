@@ -11,46 +11,42 @@ app.use(express.static('public'));
 app.use('/css', express.static(__dirname + '/node_modules/acsset/css'));
 
 app.get('/', function(req, res) {
-	Price.find({})
-		.sort([
-			['percent', 'desc'],
-			['name', 'asc']
-		])
-		.exec(function(err, prices) {
-			if (err) res.send(err);
-
-			res.render('index', {
-				data: prices,
-				column: '',
-				order: ''
-			});
-		});
-});
-
-app.get('/list/:column/:order', function(req, res) {
-	var column = req.params.column;
-	var order = req.params.order;
+	var search = req.query.search;
+	var column = req.query.column;
+	var order = req.query.order;
 	var schema = Price.findOne().schema.obj;
 
+	if (column == undefined) column = 'percent';
+	if (order == undefined) order = 'desc';
+	if (search == undefined) search = '';
+
 	if (schema.hasOwnProperty(column) && (order === 'asc' || order === 'desc')) {
-		Price.find({})
+		Price.find({
+				name: new RegExp(search, 'i')
+			})
 			.sort([
 				[column, order],
+				['percent', 'desc'],
 				['name', 'asc']
 			])
 			.exec(function(err, prices) {
 				if (err) res.send(err);
 
-				res.render('index', {
-					data: prices,
-					column: column,
-					order: order
+				Price.count({
+					'name': new RegExp(search, 'i')
+				}, function(err, count) {
+					res.render('index', {
+						data: prices,
+						column: column,
+						order: order,
+						total: count,
+						search: search
+					});
 				});
 			});
 	} else {
 		res.redirect('/');
 	}
-
 });
 
 app.get('/update', function(req, res) {

@@ -13,32 +13,49 @@
 <body>
   <div class="grid-container-fluid bg-light">
     <div class="grid-row margin-bottom-xl">
-      <div class="grid-xs-12">
+      <div class="grid-xs-4">
         <h1 class="text-xl text-secondary">Promotions</h1>
         <p class="text-sm text-default">Search products on sale</p>
+      </div>
+      <div class="grid-xs-8">
+        <form method="get" class="grid-row margin-top-xl">
+          <div class="grid-xs-10">
+            <input type="text" id="search" class="field text-field-md" name="search" placeholder="Find a product..." value="<%= search %>">
+            <p class="text-xs text-gray margin-top-xs align-right">Total products found: <%= total %></p>
+          </div>
+          <div class="grid-xs-2">
+            <input type="submit" id="btnSearch" class="btn btn-md btn-primary" value="Search">
+          </div>
+        </form>
       </div>
     </div>
     <div class="grid-row margin-bottom-xl">
       <div class="grid-xs-12">
+        <%
+          if(order == "desc"){
+            order = "asc";
+          } else{
+            order = "desc";
+          }
+
+          var separator = "?";
+          if(search != ""){
+            separator = "?search=" + search + "&";
+          }
+        %>
+        <% if(total > 0) { %>
         <table class="w100 bg-white box-shadow">
           <thead>
            <tr>
-            <%
-              if(order == "desc"){
-                order = "asc"
-              } else{
-                order = "desc"
-              }
-            %>
-             <td class="padding-sm"><a class="text-gray text-sm" href="/list/idProduct/<%= column == 'idProduct' ? order : 'desc' %>">Id</a></td>
-             <td class="padding-sm"><a class="text-gray text-sm" href="/list/name/<%= column == 'name' ? order : 'desc' %>">Name</a></td>
-             <td class="padding-sm"><a class="text-gray text-sm" href="/list/store/<%= column == 'store' ? order : 'desc' %>">Store</a></td>
-             <td class="padding-sm"><a class="text-gray text-sm" href="/list/category/<%= column == 'category' ? order : 'desc' %>">Category</a></td>
-             <td class="padding-sm"><a class="text-gray text-sm" href="/list/price/<%= column == 'price' ? order : 'desc' %>">Price</a></td>
-             <td class="padding-sm"><a class="text-gray text-sm" href="/list/oldPrice/<%= column == 'oldPrice' ? order : 'desc' %>">Old Price</a></td>
-             <td class="padding-sm"><a class="text-gray text-sm" href="/list/lowerPrice/<%= column == 'lowerPrice' ? order : 'desc' %>">Lower Price</a></td>
-             <td class="padding-sm"><a class="text-gray text-sm" href="/list/percent/<%= column == 'percent' ? order : 'desc' %>">Percent</a></td>
-             <td class="padding-sm"><a class="text-gray text-sm" href="/list/dateLowerPrice/<%= column == 'dateLowerPrice' ? order : 'desc' %>">Date Lower Price</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="<%=separator%>column=idProduct&order=<%= column == 'idProduct' ? order : 'desc' %>">Id</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="<%=separator%>column=name&order=<%= column == 'name' ? order : 'desc' %>">Name</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="<%=separator%>column=store&order=<%= column == 'store' ? order : 'desc' %>">Store</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="<%=separator%>column=category&order=<%= column == 'category' ? order : 'desc' %>">Category</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="<%=separator%>column=price&order=<%= column == 'price' ? order : 'desc' %>">Price</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="<%=separator%>column=oldPrice&order=<%= column == 'oldPrice' ? order : 'desc' %>">Old Price</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="<%=separator%>column=lowerPrice&order=<%= column == 'lowerPrice' ? order : 'desc' %>">Lowest Price</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="<%=separator%>column=percent&order=<%= column == 'percent' ? order : 'desc' %>">Percent</a></td>
+             <td class="padding-sm"><a class="text-gray text-sm" href="<%=separator%>column=dateLowerPrice&order=<%= column == 'dateLowerPrice' ? order : 'desc' %>">Date Lowest Price</a></td>
            </tr>
           </thead>
           <tbody>
@@ -57,9 +74,36 @@
             <% } %>
           </tbody>
         </table>
+        <% } else { %>
+          <p class="text-lg text-default align-center">No products found...</p>
+        <% } %>
       </div>
     </div>
   </div>
+
+  <script>
+    // document.getElementById("btnSearch").onclick = function(event) {
+    //   event.preventDefault();
+    //   submitFormAjax();
+    // };
+    // function submitFormAjax() {
+    //   var xmlhttp = new XMLHttpRequest();
+
+    //   xmlhttp.onreadystatechange = function() {
+    //     if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+    //       if (xmlhttp.status == 200) {
+    //         document.getElementById('myDiv').innerHTML = xmlhttp.responseText;
+    //       } else if (xmlhttp.status == 400) {
+    //         console.log('Error');
+    //       }
+    //     }
+    //   };
+
+    //   xmlhttp.open('POST', '/search/' + document.getElementById('search').value, true);
+    //   xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    //   xmlhttp.send();
+    // }
+  </script>
 </body>
 
 </html>
