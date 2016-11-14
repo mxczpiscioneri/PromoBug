@@ -275,9 +275,9 @@ var findOne = function(Price, product, lastProduct, nextFunction) {
 				if (priceNew < priceLower) {
 					productFind.lowerPrice = priceNew;
 					productFind.dateLowerPrice = Date.now();
-					if (productFind.percent > 10) textMessage = `Minimo (De: ${priceLower} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
+					if (productFind.percent > 10) textMessage += `Minimo (De: ${priceLower} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
 				} else if (priceNew < priceCurrent) {
-					if (productFind.percent > 10) textMessage = `Menor (De: ${priceCurrent} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
+					if (productFind.percent > 10) textMessage += `Menor (De: ${priceCurrent} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
 				} else if (priceNew > priceCurrent) {
 					productFind.percent = 0;
 				}
