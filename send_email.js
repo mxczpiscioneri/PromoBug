@@ -13,9 +13,9 @@ var send = function(textMessage) {
 	}));
 
 	var mailOptions = {
-		from: 'Matheus Piscioneri <teste@matheuspiscioneri.com.br>',
-		to: 'mxczpiscioneri@gmail.com, brenorios84@gmail.com',
-		subject: 'Promoção',
+		from: process.env.EMAIL_USER,
+		to: process.env.EMAIL_LIST_TO,
+		subject: 'Promotions',
 		html: textMessage
 	}
 
