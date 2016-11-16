@@ -15,6 +15,7 @@ var getAll = function(Price, server) {
 
 var getSubmarinoSmartphones = function(Price) {
 	request(`http://www.submarino.com.br/ajax/ofertas/linha/350374/celulares-e-telefonia-fixa/smartphone?ofertas.limit=90&ofertas.offset=${page}`, function(err, res, body) {
+		console.log(`http://www.submarino.com.br/ajax/ofertas/linha/350374/celulares-e-telefonia-fixa/smartphone?ofertas.limit=90&ofertas.offset=${page}`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
@@ -57,6 +58,7 @@ var getSubmarinoSmartphones = function(Price) {
 
 var getSubmarinoCervejas = function(Price) {
 	request(`http://www.submarino.com.br/ajax/ofertas/sublinha/300088/alimentos-e-bebidas/bebidas-alcoolicas/cervejas-especiais?ofertas.limit=90&ofertas.offset=${page}`, function(err, res, body) {
+		console.log(`http://www.submarino.com.br/ajax/ofertas/sublinha/300088/alimentos-e-bebidas/bebidas-alcoolicas/cervejas-especiais?ofertas.limit=90&ofertas.offset=${page}`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
@@ -99,6 +101,7 @@ var getSubmarinoCervejas = function(Price) {
 
 var getEmporioCervejas = function(Price) {
 	request(`http://www.emporiodacerveja.com.br/buscapagina?fq=C%3a%2f9%2f&PS=45&sl=d3798342-50b3-490e-aac9-c1aa0d5f63d8&cc=3&sm=0&PageNumber=${page}`, function(err, res, body) {
+		console.log(`http://www.emporiodacerveja.com.br/buscapagina?fq=C%3a%2f9%2f&PS=45&sl=d3798342-50b3-490e-aac9-c1aa0d5f63d8&cc=3&sm=0&PageNumber=${page}`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
@@ -141,6 +144,7 @@ var getEmporioCervejas = function(Price) {
 
 var getGearbestSmartphones = function(Price) {
 	request(`http://www.gearbest.com/cell-phones-c_11293/${page}.html?page_size=120`, function(err, res, body) {
+		console.log(`http://www.gearbest.com/cell-phones-c_11293/${page}.html?page_size=120`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
@@ -190,6 +194,7 @@ var getGearbestSmartphones = function(Price) {
 
 var getGearbestComputadores = function(Price) {
 	request(`http://www.gearbest.com/computers-networking-c_11257/${page}.html?page_size=120`, function(err, res, body) {
+		console.log(`http://www.gearbest.com/computers-networking-c_11257/${page}.html?page_size=120`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
@@ -239,6 +244,7 @@ var getGearbestComputadores = function(Price) {
 
 var getAmericanasSmartphones = function(Price) {
 	request(`http://www.americanas.com.br/categoria/350392?limite=90&offset=${page}`, function(err, res, body) {
+		console.log(`http://www.americanas.com.br/categoria/350392?limite=90&offset=${page}`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
@@ -283,6 +289,7 @@ var getAmericanasSmartphones = function(Price) {
 
 var getAmericanasCervejas = function(Price) {
 	request(`http://www.americanas.com.br/categoria/315789?limite=90&offset=${page}`, function(err, res, body) {
+		console.log(`http://www.americanas.com.br/categoria/315789?limite=90&offset=${page}`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
@@ -317,6 +324,56 @@ var getAmericanasCervejas = function(Price) {
 
 			page = page + 90;
 			getAmericanasCervejas(Price);
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getCervejastoreCervejas);
+		}
+
+	});
+}
+
+var getCervejastoreCervejas = function(Price) {
+	request({
+		url: `http://www.cervejastore.com.br/pais-s279/?pagina=${page}`,
+		headers: {
+			'User-Agent': 'Mozilla/5.0'
+		}
+	}, function(err, res, body) {
+		console.log(`http://www.cervejastore.com.br/pais-s279/?pagina=${page}`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.products').find('li').length > 0) {
+
+			$('.products li').each(function() {
+				try {
+					var store = 'Cerveja Store';
+					var idProduct = $(this).find('.buy').attr('href').split("produtoid=")[1];
+					var name = $(this).find('.product-name a').text().trim();
+					var category = 'Cerveja';
+					var price = $(this).find('.price .sale').text().trim().replace(',', '.').replace('R$ ', '');
+					var link = $(this).find('.product-name a').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 1;
+			getCervejastoreCervejas(Price);
 		} else {
 			console.log(`Total: ${total}`);
 			saveAll(Price, false);

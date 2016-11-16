@@ -14,3 +14,5 @@ Monitored Shops:
  - Americanas
 	 - Smartphone
 	 - Cerveja
+ - Cerveja Store
+	 - Cerveja
