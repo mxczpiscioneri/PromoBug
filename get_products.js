@@ -227,8 +227,96 @@ var getGearbestComputadores = function(Price) {
 				getGearbestComputadores(Price);
 			} else {
 				console.log(`Total: ${total}`);
-				saveAll(Price, false);
+				saveAll(Price, getAmericanasSmartphones);
 			}
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getAmericanasSmartphones);
+		}
+
+	});
+}
+
+var getAmericanasSmartphones = function(Price) {
+	request(`http://www.americanas.com.br/categoria/350392?limite=90&offset=${page}`, function(err, res, body) {
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.product-grid').find('.product-grid-item').length > 0) {
+
+			$('.product-grid .product-grid-item').each(function() {
+				try {
+					var store = 'Americanas';
+					var idProduct = $(this).find('.card-product-url').attr('href').split("produto/")[1].split("?")[0];
+					var name = $(this).find('.card-product-name').text().trim();
+					var category = 'Smartphone';
+					var price = $(this).find('.card-product-price .value').text().trim().replace(',', '.').replace('R$', '');
+					var link = $(this).find('.card-product-url').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 90;
+			getAmericanasSmartphones(Price);
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getAmericanasCervejas);
+		}
+
+	});
+}
+
+var getAmericanasCervejas = function(Price) {
+	request(`http://www.americanas.com.br/categoria/315789?limite=90&offset=${page}`, function(err, res, body) {
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.product-grid').find('.product-grid-item').length > 0) {
+
+			$('.product-grid .product-grid-item').each(function() {
+				try {
+					var store = 'Americanas';
+					var idProduct = $(this).find('.card-product-url').attr('href').split("produto/")[1].split("?")[0];
+					var name = $(this).find('.card-product-name').text().trim();
+					var category = 'Cerveja';
+					var price = $(this).find('.card-product-price .value').text().trim().replace(',', '.').replace('R$', '');
+					var link = $(this).find('.card-product-url').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 90;
+			getAmericanasCervejas(Price);
 		} else {
 			console.log(`Total: ${total}`);
 			saveAll(Price, false);

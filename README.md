@@ -10,4 +10,7 @@ Monitored Shops:
 	 - Cerveja
  - Gearbest
 	 - Smartphone
-	 - Computadores
+	 - Computador
+ - Americanas
+	 - Smartphone
+	 - Cerveja
