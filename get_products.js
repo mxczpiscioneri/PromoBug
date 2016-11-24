@@ -8,7 +8,7 @@ var textMessage = '';
 
 var getAll = function(Price, server) {
 	if (server) run_server = true;
-	clearVariables();
+	clearVariables(0);
 	console.log('Call getSubmarinoSmartphones');
 	getSubmarinoSmartphones(Price);
 }
@@ -451,7 +451,7 @@ var findOne = function(Price, product, lastProduct, nextFunction, pageInitial) {
 		});
 }
 
-var clearVariables = function(pageInitial = 0) {
+var clearVariables = function(pageInitial) {
 	page = pageInitial;
 	total = 0;
 	arrayItems = new Array();
