@@ -50,7 +50,7 @@ var getSubmarinoSmartphones = function(Price) {
 			getSubmarinoSmartphones(Price);
 		} else {
 			console.log(`Total: ${total}`);
-			saveAll(Price, getSubmarinoCervejas);
+			saveAll(Price, getSubmarinoCervejas, 0);
 		}
 
 	});
@@ -93,7 +93,7 @@ var getSubmarinoCervejas = function(Price) {
 			getSubmarinoCervejas(Price);
 		} else {
 			console.log(`Total: ${total}`);
-			saveAll(Price, getEmporioCervejas);
+			saveAll(Price, getEmporioCervejas, 0);
 		}
 
 	});
@@ -136,7 +136,7 @@ var getEmporioCervejas = function(Price) {
 			getEmporioCervejas(Price);
 		} else {
 			console.log(`Total: ${total}`);
-			saveAll(Price, getGearbestSmartphones);
+			saveAll(Price, getGearbestSmartphones, 1);
 		}
 
 	});
@@ -182,11 +182,11 @@ var getGearbestSmartphones = function(Price) {
 				getGearbestSmartphones(Price);
 			} else {
 				console.log(`Total: ${total}`);
-				saveAll(Price, getGearbestComputadores);
+				saveAll(Price, getGearbestComputadores, 1);
 			}
 		} else {
 			console.log(`Total: ${total}`);
-			saveAll(Price, getGearbestComputadores);
+			saveAll(Price, getGearbestComputadores, 1);
 		}
 
 	});
@@ -232,101 +232,11 @@ var getGearbestComputadores = function(Price) {
 				getGearbestComputadores(Price);
 			} else {
 				console.log(`Total: ${total}`);
-				saveAll(Price, getAmericanasSmartphones);
+				saveAll(Price, getCervejastoreCervejas, 1);
 			}
 		} else {
 			console.log(`Total: ${total}`);
-			saveAll(Price, getAmericanasSmartphones);
-		}
-
-	});
-}
-
-var getAmericanasSmartphones = function(Price) {
-	request(`http://www.americanas.com.br/categoria/350392?limite=90&offset=${page}`, function(err, res, body) {
-		console.log(`http://www.americanas.com.br/categoria/350392?limite=90&offset=${page}`);
-		if (err || res.statusCode != 200) console.log(err);
-
-		var $ = cheerio.load(body);
-		if (body.length > 0 && $('.product-grid').find('.product-grid-item').length > 0) {
-
-			$('.product-grid .product-grid-item').each(function() {
-				try {
-					var store = 'Americanas';
-					var idProduct = $(this).find('.card-product-url').attr('href').split("produto/")[1].split("?")[0];
-					var name = $(this).find('.card-product-name').text().trim();
-					var category = 'Smartphone';
-					var price = $(this).find('.card-product-price .value').text().trim().replace(',', '.').replace('R$', '');
-					var link = $(this).find('.card-product-url').attr('href');
-				} catch (err) {}
-
-				if (price) {
-					arrayItems.push({
-						'store': store,
-						'idProduct': idProduct,
-						'name': name,
-						'category': category,
-						'price': price,
-						'oldPrice': price,
-						'lowerPrice': price,
-						'percent': 0,
-						'link': link
-					});
-					// console.log(`${name} (${price})`);
-					total++;
-				}
-			});
-
-			page = page + 90;
-			getAmericanasSmartphones(Price);
-		} else {
-			console.log(`Total: ${total}`);
-			saveAll(Price, getAmericanasCervejas);
-		}
-
-	});
-}
-
-var getAmericanasCervejas = function(Price) {
-	request(`http://www.americanas.com.br/categoria/315789?limite=90&offset=${page}`, function(err, res, body) {
-		console.log(`http://www.americanas.com.br/categoria/315789?limite=90&offset=${page}`);
-		if (err || res.statusCode != 200) console.log(err);
-
-		var $ = cheerio.load(body);
-		if (body.length > 0 && $('.product-grid').find('.product-grid-item').length > 0) {
-
-			$('.product-grid .product-grid-item').each(function() {
-				try {
-					var store = 'Americanas';
-					var idProduct = $(this).find('.card-product-url').attr('href').split("produto/")[1].split("?")[0];
-					var name = $(this).find('.card-product-name').text().trim();
-					var category = 'Cerveja';
-					var price = $(this).find('.card-product-price .value').text().trim().replace(',', '.').replace('R$', '');
-					var link = $(this).find('.card-product-url').attr('href');
-				} catch (err) {}
-
-				if (price) {
-					arrayItems.push({
-						'store': store,
-						'idProduct': idProduct,
-						'name': name,
-						'category': category,
-						'price': price,
-						'oldPrice': price,
-						'lowerPrice': price,
-						'percent': 0,
-						'link': link
-					});
-					// console.log(`${name} (${price})`);
-					total++;
-				}
-			});
-
-			page = page + 90;
-			getAmericanasCervejas(Price);
-		} else {
-			console.log(`Total: ${total}`);
-			saveAll(Price, getCervejastoreCervejas);
+			saveAll(Price, getCervejastoreCervejas, 1);
 		}
 
 	});
@@ -376,25 +286,116 @@ var getCervejastoreCervejas = function(Price) {
 			getCervejastoreCervejas(Price);
 		} else {
 			console.log(`Total: ${total}`);
-			saveAll(Price, false);
+			saveAll(Price, getBanggoodSmartphones, 1);
 		}
 
 	});
 }
 
-var saveAll = function(Price, nextFunction) {
+var getBanggoodSmartphones = function(Price) {
+	request(`http://www.banggood.com/Wholesale-Smartphones-c-1567-0-1-1-45-0_page${page}.html`, function(err, res, body) {
+		console.log(`http://www.banggood.com/Wholesale-Smartphones-c-1567-0-1-1-45-0_page${page}.html`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.good_box_min').find('.goodlist_1 ').length > 0) {
+
+			$('.goodlist_1 li').each(function() {
+				try {
+					var store = 'Banggood';
+					var idProduct = $(this).find('.title a').attr('href').split(".html")[0].split("-p-")[1];
+					var name = $(this).find('.title a').text().trim();
+					var category = 'Smartphone';
+					var price = $(this).find('.price').attr('oriprice').trim();
+					var link = $(this).find('.title a').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 1;
+			getBanggoodSmartphones(Price);
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getAmericanasCervejas, 0);
+		}
+
+	});
+}
+
+var getAmericanasCervejas = function(Price) {
+	request(`http://www.americanas.com.br/categoria/315789?limite=90&offset=${page}`, function(err, res, body) {
+		console.log(`http://www.americanas.com.br/categoria/315789?limite=90&offset=${page}`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.product-grid').find('.product-grid-item').length > 0) {
+
+			$('.product-grid .product-grid-item').each(function() {
+				try {
+					var store = 'Americanas';
+					var idProduct = $(this).find('.card-product-url').attr('href').split("produto/")[1].split("?")[0];
+					var name = $(this).find('.card-product-name').text().trim();
+					var category = 'Cerveja';
+					var price = $(this).find('.card-product-price .value').text().trim().replace(',', '.').replace('R$', '');
+					var link = $(this).find('.card-product-url').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 90;
+			getAmericanasCervejas(Price);
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, false, 0);
+		}
+
+	});
+}
+
+var saveAll = function(Price, nextFunction, pageInitial) {
+	console.log('Save');
 	for (var item in arrayItems) {
 		if (arrayItems.hasOwnProperty(item)) {
 			var lastProduct = false;
 			if ((arrayItems.length - 1) == item) lastProduct = true;
 
 			var product = new Price(arrayItems[item]);
-			findOne(Price, product, lastProduct, nextFunction);
+			findOne(Price, product, lastProduct, nextFunction, pageInitial);
 		}
 	}
 }
 
-var findOne = function(Price, product, lastProduct, nextFunction) {
+var findOne = function(Price, product, lastProduct, nextFunction, pageInitial) {
 	var query = {
 		store: product.store,
 		idProduct: product.idProduct
@@ -434,21 +435,24 @@ var findOne = function(Price, product, lastProduct, nextFunction) {
 		.then(function() {
 			if (lastProduct) {
 				if (nextFunction) {
-					clearVariables();
+					clearVariables(pageInitial);
 					console.log(`Call ${nextFunction.name}`);
 					nextFunction(Price);
 				} else {
 					console.log(textMessage);
-					if (textMessage != '') Email.send(textMessage);
-					console.log('Fim');
+					if (textMessage != '') {
+						Email.send(textMessage);
+						console.log('Email sent');
+					}
+					console.log('End');
 					if (!run_server) process.exit();
 				}
 			}
 		});
 }
 
-var clearVariables = function() {
-	page = 0;
+var clearVariables = function(pageInitial = 0) {
+	page = pageInitial;
 	total = 0;
 	arrayItems = new Array();
 }
