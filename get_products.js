@@ -253,7 +253,7 @@ var getCervejastoreCervejas = function(Price) {
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
-		if (body.length > 0 && $('.products').find('li').length > 0) {
+		if (body.length > 0 && $('.products').find('li').length > 0 && $('.advanced-search').length <= 0) {
 
 			$('.products li').each(function() {
 				try {
@@ -374,6 +374,51 @@ var getAmericanasCervejas = function(Price) {
 
 			page = page + 90;
 			getAmericanasCervejas(Price);
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getKabumSmartphones, 1);
+		}
+
+	});
+}
+
+var getKabumSmartphones = function(Price) {
+	request(`http://www.kabum.com.br/celular-telefone/smartphones?string=&dep=2422&sec=2424&cat=&sub=&pagina=${page}&ordem=5&limite=100`, function(err, res, body) {
+		console.log(`http://www.kabum.com.br/celular-telefone/smartphones?string=&dep=2422&sec=2424&cat=&sub=&pagina=${page}&ordem=5&limite=100`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.box_page').find('.listagem-box').length > 0) {
+
+			$('.box_page .listagem-box').each(function() {
+				try {
+					var store = 'Kabum';
+					var idProduct = $(this).find('.listagem-bots div a').attr('href').split("codigo=")[1];
+					var name = $(this).find('.H-titulo a').text().trim();
+					var category = 'Smartphone';
+					var price = $(this).find('.listagem-preco').text().trim().replace('.', '').replace(',', '.').replace('R$ ', '');
+					var link = $(this).find('.H-titulo a').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page++;
+			getKabumSmartphones(Price);
 		} else {
 			console.log(`Total: ${total}`);
 			saveAll(Price, false, 0);

@@ -12,7 +12,10 @@ Monitored Shops:
 	 - Smartphone
 	 - Computador
  - Americanas
-	 - Smartphone
 	 - Cerveja
  - Cerveja Store
 	 - Cerveja
+ - Banggood
+	 - Smartphone
+ - Kabum
+	 - Smartphone
