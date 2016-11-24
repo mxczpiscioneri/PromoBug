@@ -10,7 +10,7 @@ var getAll = function(Price, server) {
 	if (server) run_server = true;
 	clearVariables();
 	console.log('Call getSubmarinoSmartphones');
-	getCervejastoreCervejas(Price);
+	getSubmarinoSmartphones(Price);
 }
 
 var getSubmarinoSmartphones = function(Price) {
