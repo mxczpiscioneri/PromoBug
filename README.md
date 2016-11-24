@@ -17,5 +17,3 @@ Monitored Shops:
 	 - Cerveja
  - Banggood
 	 - Smartphone
- - Kabum
-	 - Smartphone
