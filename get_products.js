@@ -244,12 +244,12 @@ var getGearbestComputadores = function(Price) {
 
 var getCervejastoreCervejas = function(Price) {
 	request({
-		url: `http://www.cervejastore.com.br/pesquisa/?pagina=${page}&s=279&p=%25%25%25`,
+		url: `http://www.cervejastore.com.br/pais-s279/?pagina=${page}`,
 		headers: {
 			'User-Agent': 'Mozilla/5.0'
 		}
 	}, function(err, res, body) {
-		console.log(`http://www.cervejastore.com.br/pesquisa/?pagina=${page}&s=279&p=%25%25%25`);
+		console.log(`http://www.cervejastore.com.br/pais-s279/?pagina=${page}`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
