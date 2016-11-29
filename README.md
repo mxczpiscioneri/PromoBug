@@ -11,9 +11,17 @@ Monitored Shops:
  - Gearbest
 	 - Smartphone
 	 - Computador
+	 - Xiaomi
  - Americanas
 	 - Cerveja
  - Cerveja Store
 	 - Cerveja
  - Banggood
 	 - Smartphone
+	 - Xiaomi
+ - Everbuying
+	 - Xiaomi
+ - Geekbuying 
+	 - Xiaomi
+ - TinyDeal 
+	 - Xiaomi

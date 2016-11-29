@@ -232,6 +232,56 @@ var getGearbestComputadores = function(Price) {
 				getGearbestComputadores(Price);
 			} else {
 				console.log(`Total: ${total}`);
+				saveAll(Price, getGearbestXiaomi, 1);
+			}
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getGearbestXiaomi, 1);
+		}
+
+	});
+}
+
+var getGearbestXiaomi = function(Price) {
+	request(`http://www.gearbest.com/top-brands/brand/xiaomi.html?page=${page}`, function(err, res, body) {
+		console.log(`http://www.gearbest.com/top-brands/brand/xiaomi.html?page=${page}`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0) {
+
+			$('#catePageList li').each(function() {
+				try {
+					var store = 'Gearbest';
+					var idProduct = $(this).find('.js_addToCompare').attr('data-goodsid');
+					var name = $(this).find('.all_proNam a').text().trim();
+					var category = $(this).find('.all_proNam a').attr('href').split('/')[3];
+					var price = $(this).find('.my_shop_price').attr('orgp').trim();
+					var link = $(this).find('.all_proNam a').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			if ($('.cate_list_footer').find('.next').length > 0) {
+				page = page + 1;
+				getGearbestXiaomi(Price);
+			} else {
+				console.log(`Total: ${total}`);
 				saveAll(Price, getCervejastoreCervejas, 1);
 			}
 		} else {
@@ -331,6 +381,51 @@ var getBanggoodSmartphones = function(Price) {
 			getBanggoodSmartphones(Price);
 		} else {
 			console.log(`Total: ${total}`);
+			saveAll(Price, getBanggoodXiaomi, 1);
+		}
+
+	});
+}
+
+var getBanggoodXiaomi = function(Price) {
+	request(`http://www.banggood.com/search/xiaomi/0-0-0-1-1-45-0-price-0-0_p-${page}.html`, function(err, res, body) {
+		console.log(`http://www.banggood.com/search/xiaomi/0-0-0-1-1-45-0-price-0-0_p-${page}.html`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.good_box_min').find('.goodlist_1 ').length > 0) {
+
+			$('.goodlist_1 li').each(function() {
+				try {
+					var store = 'Banggood';
+					var idProduct = $(this).find('.title a').attr('href').split(".html")[0].split("-p-")[1];
+					var name = $(this).find('.title a').text().trim();
+					var category = '';
+					var price = $(this).find('.price').attr('oriprice').trim();
+					var link = $(this).find('.title a').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 1;
+			getBanggoodXiaomi(Price);
+		} else {
+			console.log(`Total: ${total}`);
 			saveAll(Price, getAmericanasCervejas, 0);
 		}
 
@@ -374,6 +469,141 @@ var getAmericanasCervejas = function(Price) {
 
 			page = page + 90;
 			getAmericanasCervejas(Price);
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getEverbuyingXiaomi, 1);
+		}
+
+	});
+}
+
+var getEverbuyingXiaomi = function(Price) {
+	request(`http://www.everbuying.net/brand-xiaomi-page-${page}.html?page_size=48`, function(err, res, body) {
+		console.log(`http://www.everbuying.net/brand-xiaomi-page-${page}.html?page_size=48`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('#g_pro').find('.g_pro1').length > 0) {
+
+			$('#g_pro > div').each(function() {
+				try {
+					var store = 'Everbuying';
+					var idProduct = $(this).find('.js_addToCompare').attr('data-goodsid');
+					var name = $(this).find('.grid_pro_t').attr('title');
+					var category = '';
+					var price = $(this).find('.my_shop_price').attr('orgp').trim();
+					var link = `http://www.everbuying.net${$(this).find('.grid_pro_t').attr('href')}`;
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 1;
+			getEverbuyingXiaomi(Price);
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getGeekbuyingXiaomi, 1);
+		}
+
+	});
+}
+
+var getGeekbuyingXiaomi = function(Price) {
+	request(`http://www.geekbuying.com/Search?keyword=xiaomi&c=&page=${page}&pagesize=80`, function(err, res, body) {
+		console.log(`http://www.geekbuying.com/Search?keyword=xiaomi&c=&page=${page}&pagesize=80`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.gridView').find('.searchResultItem').length > 0) {
+
+			$('.gridView .searchResultItem').each(function() {
+				try {
+					var store = 'Geekbuying';
+					var idProduct = $(this).find('.name a').attr('id');
+					var name = $(this).find('.name a').attr('title');
+					var category = $(this).find('.name a').attr('category');
+					var price = $(this).find('.price').text().trim().replace('USD ', '');
+					var link = $(this).find('.name a').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 1;
+			getGeekbuyingXiaomi(Price);
+		} else {
+			console.log(`Total: ${total}`);
+			saveAll(Price, getTinydealXiaomi, 1);
+		}
+
+	});
+}
+
+var getTinydealXiaomi = function(Price) {
+	request(`http://www.tinydeal.com/top_brands/xiaomi-610.html?page=${page}`, function(err, res, body) {
+		console.log(`http://www.tinydeal.com/top_brands/xiaomi-610.html?page=${page}`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('#brand_show_product').find('.p_box_wrapper').length > 0) {
+
+			$('#brand_show_product .p_box_wrapper').each(function() {
+				try {
+					var store = 'TinyDeal';
+					var idProduct = $(this).find('.swSprite_addtocart').attr('id').replace('cart', '');
+					var name = $(this).find('.p_box_title').text().trim();
+					var category = '';
+					var price = $(this, '.p_box_price').find('.productSpecialPrice').length > 0 ? $(this, '.p_box_price ').find('.productSpecialPrice').text().trim().replace('$', '') : $(this).find('.p_box_price').contents().get(0).nodeValue.replace('$', '');
+					var link = `http://www.tinydeal.com/${$(this).find('.p_box_title').attr('href')}`;
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 1;
+			getTinydealXiaomi(Price);
 		} else {
 			console.log(`Total: ${total}`);
 			saveAll(Price, false, 0);
@@ -423,7 +653,7 @@ var findOne = function(Price, product, lastProduct, nextFunction, pageInitial) {
 					productFind.dateLowerPrice = Date.now();
 					if (productFind.percent > 10) textMessage += `Minimo (De: ${priceLower} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
 				} else if (priceNew < priceCurrent) {
-					if (productFind.percent > 10) textMessage += `Menor (De: ${priceCurrent} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
+					if (productFind.percent > 10) textMessage += `Menor  (De: ${priceCurrent} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
 				} else if (priceNew > priceCurrent) {
 					productFind.percent = 0;
 				}
