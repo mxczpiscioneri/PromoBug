@@ -438,7 +438,7 @@ var getAmericanasCervejas = function(Price) {
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
-		if (body.length > 0 && $('.product-grid').find('.product-grid-item').length > 0) {
+		if (body.length > 0 && $('.product-grid').find('.product-grid-item').length > 0 && $('.product-grid ~ div > .card-pagination').length > 0) {
 
 			$('.product-grid .product-grid-item').each(function() {
 				try {
