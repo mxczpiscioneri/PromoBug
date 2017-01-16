@@ -100,8 +100,8 @@ var getSubmarinoCervejas = function(Price) {
 }
 
 var getEmporioCervejas = function(Price) {
-	request(`http://www.emporiodacerveja.com.br/buscapagina?fq=C%3a%2f9%2f&PS=45&sl=d3798342-50b3-490e-aac9-c1aa0d5f63d8&cc=3&sm=0&PageNumber=${page}`, function(err, res, body) {
-		console.log(`http://www.emporiodacerveja.com.br/buscapagina?fq=C%3a%2f9%2f&PS=45&sl=d3798342-50b3-490e-aac9-c1aa0d5f63d8&cc=3&sm=0&PageNumber=${page}`);
+	request(`http://www.emporio.com/cervejas`, function(err, res, body) {
+		console.log(`http://www.emporio.com/cervejas`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
@@ -132,9 +132,6 @@ var getEmporioCervejas = function(Price) {
 				}
 			});
 
-			page = page + 1;
-			getEmporioCervejas(Price);
-		} else {
 			console.log(`Total: ${total}`);
 			saveAll(Price, getGearbestSmartphones, 1);
 		}
