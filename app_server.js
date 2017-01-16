@@ -16,7 +16,7 @@ app.get('/', function(req, res) {
 	var order = req.query.order;
 	var schema = Price.findOne().schema.obj;
 
-	if (column == undefined) column = 'percent';
+	if (column == undefined) column = 'dateLowerPrice';
 	if (order == undefined) order = 'desc';
 	if (search == undefined) search = '';
 

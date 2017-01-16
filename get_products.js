@@ -279,40 +279,35 @@ var getGearbestXiaomi = function(Price) {
 				getGearbestXiaomi(Price);
 			} else {
 				console.log(`Total: ${total}`);
-				saveAll(Price, getCervejastoreCervejas, 1);
+				saveAll(Price, getCervejastoreCervejas, 0);
 			}
 		} else {
 			console.log(`Total: ${total}`);
-			saveAll(Price, getCervejastoreCervejas, 1);
+			saveAll(Price, getCervejastoreCervejas, 0);
 		}
 
 	});
 }
 
 var getCervejastoreCervejas = function(Price) {
-	request({
-		url: `http://www.cervejastore.com.br/pais-s279/?pagina=${page}`,
-		headers: {
-			'User-Agent': 'Mozilla/5.0'
-		}
-	}, function(err, res, body) {
-		console.log(`http://www.cervejastore.com.br/pais-s279/?pagina=${page}`);
+	request(`http://www.cervejastore.com.br/buscapagina?fq=C%3a%2f805%2f&PS=15&sl=396865e6-7e6b-4ae7-bcfc-5ccc8df30130&cc=5&sm=0&PageNumber=${page}`, function(err, res, body) {
+		console.log(`http://www.cervejastore.com.br/buscapagina?fq=C%3a%2f805%2f&PS=15&sl=396865e6-7e6b-4ae7-bcfc-5ccc8df30130&cc=5&sm=0&PageNumber=${page}`);
 		if (err || res.statusCode != 200) console.log(err);
 
 		var $ = cheerio.load(body);
-		if (body.length > 0 && $('.products').find('li').length > 0 && $('.advanced-search').length <= 0) {
+		if (body.length > 0 && $('.prateleira').find('ul li').length > 0) {
 
-			$('.products li').each(function() {
+			$('.prateleira ul li').each(function() {
 				try {
 					var store = 'Cerveja Store';
-					var idProduct = $(this).find('.buy').attr('href').split("produtoid=")[1];
+					var idProduct = $(this).find('.product-buy').attr('rel');
 					var name = $(this).find('.product-name a').text().trim();
 					var category = 'Cerveja';
-					var price = $(this).find('.price .sale').text().trim().replace(',', '.').replace('R$ ', '');
+					var price = $(this).find('.val-best-price').val().replace(',', '.').replace('R$ ', '');
 					var link = $(this).find('.product-name a').attr('href');
 				} catch (err) {}
 
-				if (price) {
+				if (price > 0.00) {
 					arrayItems.push({
 						'store': store,
 						'idProduct': idProduct,
@@ -324,7 +319,7 @@ var getCervejastoreCervejas = function(Price) {
 						'percent': 0,
 						'link': link
 					});
-					// console.log(`${name} (${price})`);
+					console.log(`${name} (${price})`);
 					total++;
 				}
 			});
