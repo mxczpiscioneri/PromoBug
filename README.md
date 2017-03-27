@@ -25,3 +25,5 @@ Monitored Shops:
 	 - Xiaomi
  - TinyDeal 
 	 - Xiaomi
+ - Cissa Magazine 
+	 - Smartphone

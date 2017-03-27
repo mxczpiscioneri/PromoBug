@@ -319,7 +319,7 @@ var getCervejastoreCervejas = function(Price) {
 						'percent': 0,
 						'link': link
 					});
-					console.log(`${name} (${price})`);
+					// console.log(`${name} (${price})`);
 					total++;
 				}
 			});
@@ -598,6 +598,51 @@ var getTinydealXiaomi = function(Price) {
 			getTinydealXiaomi(Price);
 		} else {
 			console.log(`Total: ${total}`);
+			saveAll(Price, getCissaSmartphones, 1);
+		}
+
+	});
+}
+
+var getCissaSmartphones = function(Price) {
+	request(`https://www.cissamagazine.com.br/smartphones?p=${page}`, function(err, res, body) {
+		console.log(`https://www.cissamagazine.com.br/smartphones?p=${page}`);
+		if (err || res.statusCode != 200) console.log(err);
+
+		var $ = cheerio.load(body);
+		if (body.length > 0 && $('.product-list').find('li').length > 0) {
+
+			$('.product-list li').each(function() {
+				try {
+					var store = 'CissaMagazine';
+					var idProduct = $(this).attr('data-id');
+					var name = $(this).find('.product-name').text().trim();
+					var category = 'Smartphone';
+					var price = $(this).find('.price-big span').text().trim().replace('.', '').replace(',', '.');
+					var link = $(this).find('a').attr('href');
+				} catch (err) {}
+
+				if (price) {
+					arrayItems.push({
+						'store': store,
+						'idProduct': idProduct,
+						'name': name,
+						'category': category,
+						'price': price,
+						'oldPrice': price,
+						'lowerPrice': price,
+						'percent': 0,
+						'link': link
+					});
+					// console.log(`${name} (${price})`);
+					total++;
+				}
+			});
+
+			page = page + 1;
+			getCissaSmartphones(Price);
+		} else {
+			console.log(`Total: ${total}`);
 			saveAll(Price, false, 0);
 		}
 
@@ -645,7 +690,7 @@ var findOne = function(Price, product, lastProduct, nextFunction, pageInitial) {
 					productFind.dateLowerPrice = Date.now();
 					if (productFind.percent > 10) textMessage += `Minimo (De: ${priceLower} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
 				} else if (priceNew < priceCurrent) {
-					if (productFind.percent > 10) textMessage += `Menor  (De: ${priceCurrent} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
+					if (productFind.percent > 30) textMessage += `Menor  (De: ${priceCurrent} Para: ${priceNew}) ${productFind.name} (${productFind.link}) <br><br>`;
 				} else if (priceNew > priceCurrent) {
 					productFind.percent = 0;
 				}
